@@ -182,9 +182,13 @@ class pbkColl
 //		pXfile << EC.dectoint(Xpoints01[0]) << ",\n";
 //		Xpoints01[0] = "";//esvazia a variável
 
-	  
+		cpp_int n_order_meio = EC.n_order/2;
 
-		for(int i = 1; i <= slices/2; i++)
+
+		int i = 0;
+
+		//for(int i = 1; i <= slices/2; i++)
+		for(i = 1; i <= slices/2; i++)
 		{
 			
 			ichA = EC.modp((ichA + EC.n_order/slices), EC.p);
@@ -203,6 +207,56 @@ class pbkColl
 			std::cout << "Point: " << gn[0] << ": " << i << " de " << slices/2 << std::endl;
 			//std::cout << "Py: " << gn[1] << std::endl;
 		}
+
+
+		///////////////////////////////////////////////////////////////////////////////////////
+		//inserir um ponto a mais ao final para garantir o ponto do meio e/ou mais um;
+		///////////////////////////////////////////////////////////////////////////////////////
+
+		//ichA = EC.n_order/2;
+		ichA = n_order_meio;
+
+		//cpp_int *g, gn[2];
+		g = EC.secp256k1 (ichA, EC.Gx, EC.Gy);
+		gn[0] = g[0];
+		gn[1] = g[1];
+
+		if(gn[0] != pointsPBKderiva[i-1])
+		{
+
+
+			//pointsPBKderiva[i] = gn[0];
+			pXfile << "\"" << gn[0] << "\"" << ",\n";
+//			pXfile << EC.dectoint(Xpoints01[i]) << ",\n";
+//			Xpoints01[i] = "";//esvazia a variável
+
+			//std::cout << "Px: " << gn[0] << std::endl;
+			std::cout << "Point: " << gn[0] << " (n_order/2)" << std::endl;
+			//std::cout << "Py: " << gn[1] << std::endl;
+		}
+		else
+		{
+
+			//ichA = (EC.n_order/2) - 1;
+			ichA = n_order_meio - 1;
+			//ichA = EC.modp((ichA + (EC.n_order/2)/(slices/2)), EC.p); //equivalencia
+
+			//cpp_int *g, gn[2];
+			g = EC.secp256k1 (ichA, EC.Gx, EC.Gy);
+			gn[0] = g[0];
+			gn[1] = g[1];
+
+			//pointsPBKderiva[i] = gn[0];
+			pXfile << "\"" << gn[0] << "\"" << ",\n";
+//			pXfile << EC.dectoint(Xpoints01[i]) << ",\n";
+//			Xpoints01[i] = "";//esvazia a variável
+
+			//std::cout << "Px: " << gn[0] << std::endl;
+			std::cout << "Point: " << gn[0] << " (n_order/2) - 1 " << std::endl;
+			//std::cout << "Py: " << gn[1] << std::endl;
+		
+		}
+
 
 		pXfile << "\"EOF\" };";
 		pXfile.close();
